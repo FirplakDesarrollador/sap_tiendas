@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# sap_tiendas
 
-## Getting Started
+Portal Corporativo de Servicios y Gestión Comercial para SAP Tiendas - **Firplak S.A.**
 
-First, run the development server:
+## 🚀 Características
+- **Autenticación Corporativa**: Integración con Supabase Auth y validación de roles de usuario (`public.Usuarios`).
+- **Integración SAP Service Layer**: Conexión directa a SAP Business One (`Firplak_SA`) para sincronización de datos operativos en tiempo real.
+- **Barra Lateral de Navegación (*Slide Bar*)**: Diseño responsive con navegación colapsable, estados de conexión en vivo y vistas modulares.
+- **Módulo Tiendas y Sucursales**: Gestión integral de puntos de venta y enlace a `public.Ubicaciones`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Tecnologías
+- **Framework**: Next.js 16 (App Router) + React 19
+- **Estilos**: Vanilla CSS Modules con diseño corporativo premium
+- **Base de Datos & Auth**: Supabase Cloud
+- **ERP**: SAP Business One Service Layer (OData / REST)
+- **Iconografía**: Lucide React
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚙️ Configuración
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/FirplakDesarrollador/sap_tiendas.git
+   cd sap_tiendas
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Instalar dependencias:
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. Configurar variables de entorno en `.env.local` (ver `.env.example`):
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
+   SAP_BASE_URL=https://servidor-sap:50000/b1s/v1
+   SAP_COMPANY_DB=Firplak_SA
+   SAP_USERNAME=manager
+   SAP_PASSWORD="tu-password"
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. Iniciar el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Abrir [http://localhost:3000](http://localhost:3000) o el puerto asignado.
