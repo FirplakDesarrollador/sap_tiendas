@@ -24,6 +24,28 @@ export const OFERTAS_CONFIG: DocConfig = {
   ],
 }
 
+export const ENTREGAS_CONFIG: DocConfig = {
+  module: 'entregas',
+  title: 'Entrega',
+  listTitle: 'Entregas',
+  udfTable: 'ODLN',
+  udfFields: [
+    'U_ViadelPedido', 'U_TipoPedidos', 'U_TipoVentas', 'U_FEsperadaEntrega', 'U_LugarEntrega', 'U_MedioTransp',
+    'U_Incoterm', 'U_Autorret', 'U_Retefue', 'U_ReteIca', 'U_HBT_TipoFactura', 'U_TipoFacturacion',
+  ],
+}
+
+export const FACTURAS_CONFIG: DocConfig = {
+  module: 'facturas',
+  title: 'Factura de deudores',
+  listTitle: 'Facturas de clientes',
+  udfTable: 'OINV',
+  udfFields: [
+    'U_Via', 'U_ViadelPedido', 'U_Anticipo', 'U_TipoPedidos', 'U_ValorAmortFact', 'U_ValorPagar', 'U_PorcAmortizacionFa',
+    'U_TipoVentas', 'U_TipoRadicacionFact', 'U_HBT_TipoFactura',
+  ],
+}
+
 const PAGE = 20
 const qty = (n: any) => Number(n || 0).toLocaleString('es-CO', { maximumFractionDigits: 2 })
 function optLabel(opts: { value: any; label: string }[], v: any) {
@@ -103,7 +125,7 @@ function DocList({ config, onOpen }: { config: DocConfig; onOpen: (e: number) =>
           <thead>
             <tr>
               <th>Nº</th><th>Fecha</th><th>Válido hasta</th><th>Código cliente</th><th>Nombre cliente</th><th>Referencia</th>
-              <th>Empleado de ventas</th><th className={s.num}>IVA</th><th className={s.num}>Total documento</th><th>Estado</th>
+              <th>Empleado de ventas</th><th className={s.num}>IVA</th><th className={s.num}>Total documento</th>{config.module === 'facturas' && <th className={s.num}>Saldo pendiente</th>}<th>Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -118,10 +140,11 @@ function DocList({ config, onOpen }: { config: DocConfig; onOpen: (e: number) =>
                 <td>{optLabel(slp.opts, r.SalesPersonCode)}</td>
                 <td className={s.num}>{fmtMoney(r.VatSum)}</td>
                 <td className={s.num}>{fmtMoney(r.DocTotal)}</td>
+                {config.module === 'facturas' && <td className={s.num}>{fmtMoney((r.DocTotal || 0) - (r.PaidToDate || 0))}</td>}
                 <td><StatusBadge row={r} /></td>
               </tr>
             ))}
-            {!loading && !rows.length && !err && <tr><td colSpan={10} className={s.muted}>Sin resultados</td></tr>}
+            {!loading && !rows.length && !err && <tr><td colSpan={11} className={s.muted}>Sin resultados</td></tr>}
           </tbody>
         </table>
       </div>
@@ -259,6 +282,7 @@ function DocDetail({ config, docEntry, onBack }: { config: DocConfig; docEntry: 
               <Field label="Descuento %"><TextInput className={s.num} value={`${qty(doc.DiscountPercent)} % • ${fmtMoney(doc.TotalDiscount)}`} /></Field>
               <Field label="Impuesto"><TextInput className={s.num} value={fmtMoney(doc.VatSum)} /></Field>
               {config.module === 'facturas' && <Field label="Importe aplicado"><TextInput className={s.num} value={fmtMoney(doc.PaidToDate)} /></Field>}
+              {config.module === 'facturas' && <Field label="Saldo pendiente"><TextInput className={s.num} value={fmtMoney((doc.DocTotal || 0) - (doc.PaidToDate || 0))} /></Field>}
               <div className={s.totalStrong}><Field label="Total del documento"><TextInput className={s.num} value={fmtMoney(doc.DocTotal)} /></Field></div>
             </div>
           </div>
