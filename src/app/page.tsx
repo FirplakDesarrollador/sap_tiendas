@@ -50,6 +50,7 @@ import {
 } from 'lucide-react'
 import ClientesModule from '@/components/sap/ClientesModule'
 import InventarioModule from '@/components/sap/InventarioModule'
+import PagosModule from '@/components/sap/PagosModule'
 import DocumentModule, { OFERTAS_CONFIG, ENTREGAS_CONFIG, FACTURAS_CONFIG } from '@/components/sap/DocumentModule'
 
 // Definición de interfaces para los módulos
@@ -210,7 +211,7 @@ export default function AppHome() {
       icon: Boxes,
       iconColor: '#0f766e',
       iconBg: '#ccfbf1',
-      status: 'Próximamente',
+      status: 'En vivo',
       tableRef: 'SAP: Items (OITM / OITW)'
     }
   ]
@@ -781,6 +782,8 @@ export default function AppHome() {
               <InventarioModule onBack={() => setCurrentView('dashboard')} />
             ) : currentView === 'sap-ofertas' ? (
               <DocumentModule key="ofertas" config={OFERTAS_CONFIG} onBack={() => setCurrentView('dashboard')} />
+            ) : currentView === 'sap-pagos' ? (
+              <PagosModule onBack={() => setCurrentView('dashboard')} />
             ) : currentView === 'sap-entregas' ? (
               <DocumentModule key="entregas" config={ENTREGAS_CONFIG} onBack={() => setCurrentView('dashboard')} />
             ) : currentView === 'sap-facturas' ? (
