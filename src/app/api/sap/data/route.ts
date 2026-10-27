@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSapOrders, getSapItems, getSapBusinessPartners } from '@/lib/sap/serviceLayer';
+import { requireUser } from '@/lib/sap/auth';
 
 export async function GET(request: NextRequest) {
+  const user = await requireUser(request);
+  if (user instanceof NextResponse) return user;
   const { searchParams } = new URL(request.url);
   const entity = searchParams.get('entity') || 'orders';
-  const limit = parseInt(searchParams.get('limit') || '10', 10);
+  const limit = Math.min(Math.max(parseInt(searchParams.get('limit') || '10', 10) || 10, 1), 50);
 
   try {
     if (entity === 'orders') {
