@@ -40,8 +40,15 @@ import {
   ChevronLeft,
   Construction,
   Clock,
-  ArrowLeft
+  ArrowLeft,
+  UserPlus,
+  Wallet,
+  FileSignature,
+  Truck,
+  Receipt,
+  Boxes
 } from 'lucide-react'
+import ClientesModule from '@/components/sap/ClientesModule'
 
 // Definición de interfaces para los módulos
 interface AppMod {
@@ -99,6 +106,17 @@ export default function AppHome() {
       items: [
         { id: 'tiendas-ubicaciones', title: 'Tiendas y Sucursales', icon: Store, badge: '28' }
       ]
+    },
+    {
+      label: 'SAP BUSINESS ONE',
+      items: [
+        { id: 'sap-clientes', title: 'Creación de Clientes', icon: UserPlus, badge: null },
+        { id: 'sap-pagos', title: 'Pagos Recibidos', icon: Wallet, badge: null },
+        { id: 'sap-ofertas', title: 'Ofertas de Venta', icon: FileSignature, badge: null },
+        { id: 'sap-entregas', title: 'Entrega', icon: Truck, badge: null },
+        { id: 'sap-facturas', title: 'Factura', icon: Receipt, badge: null },
+        { id: 'sap-inventario', title: 'Inventario', icon: Boxes, badge: null }
+      ]
     }
   ]
 
@@ -126,6 +144,72 @@ export default function AppHome() {
         { col1: 'Tienda Cali Chipichape', col2: 'Av 6N # 38N-10', col3: 'Cali', col4: 'Activa' },
         { col1: 'Distribuidor Mayorista Barranquilla', col2: 'Cra 53 # 79-112', col3: 'Barranquilla', col4: 'Activa' }
       ]
+    },
+    {
+      id: 'sap-clientes',
+      title: 'Creación de Clientes',
+      description: 'Socios de negocio (clientes) en SAP Business One: búsqueda, ficha completa, direcciones, contactos, propiedades y localización HBT.',
+      category: 'SAP & Logística',
+      icon: UserPlus,
+      iconColor: '#b45309',
+      iconBg: '#fef3c7',
+      status: 'En vivo',
+      tableRef: 'SAP: BusinessPartners (OCRD)'
+    },
+    {
+      id: 'sap-pagos',
+      title: 'Pagos Recibidos',
+      description: 'Registro de pagos recibidos y anticipos de clientes contra facturas abiertas.',
+      category: 'SAP & Logística',
+      icon: Wallet,
+      iconColor: '#15803d',
+      iconBg: '#dcfce7',
+      status: 'Próximamente',
+      tableRef: 'SAP: IncomingPayments (ORCT)'
+    },
+    {
+      id: 'sap-ofertas',
+      title: 'Ofertas de Venta',
+      description: 'Cotizaciones a clientes con líneas de artículos, impuestos, empleado de ventas y campos Firplak.',
+      category: 'SAP & Logística',
+      icon: FileSignature,
+      iconColor: '#1d4ed8',
+      iconBg: '#dbeafe',
+      status: 'Próximamente',
+      tableRef: 'SAP: Quotations (OQUT)'
+    },
+    {
+      id: 'sap-entregas',
+      title: 'Entrega',
+      description: 'Remisiones / entregas a clientes, copiando desde ofertas de venta.',
+      category: 'SAP & Logística',
+      icon: Truck,
+      iconColor: '#7c3aed',
+      iconBg: '#ede9fe',
+      status: 'Próximamente',
+      tableRef: 'SAP: DeliveryNotes (ODLN)'
+    },
+    {
+      id: 'sap-facturas',
+      title: 'Factura',
+      description: 'Facturas de deudores copiando desde entregas, con totales e impuestos.',
+      category: 'SAP & Logística',
+      icon: Receipt,
+      iconColor: '#be123c',
+      iconBg: '#ffe4e6',
+      status: 'Próximamente',
+      tableRef: 'SAP: Invoices (OINV)'
+    },
+    {
+      id: 'sap-inventario',
+      title: 'Inventario',
+      description: 'Consulta de artículos, stock por almacén, comprometido, pedido y precios.',
+      category: 'SAP & Logística',
+      icon: Boxes,
+      iconColor: '#0f766e',
+      iconBg: '#ccfbf1',
+      status: 'Próximamente',
+      tableRef: 'SAP: Items (OITM / OITW)'
     }
   ]
 
@@ -634,7 +718,7 @@ export default function AppHome() {
                       </div>
 
                       <div className={styles.categoryPills}>
-                        {['Todos', 'Comercial'].map((cat) => (
+                        {['Todos', 'Comercial', 'SAP & Logística'].map((cat) => (
                           <button
                             key={cat}
                             className={`${styles.pillBtn} ${selectedCategory === cat ? styles.pillBtnActive : ''}`}
@@ -689,6 +773,8 @@ export default function AppHome() {
                   </div>
                 </section>
               </main>
+            ) : currentView === 'sap-clientes' ? (
+              <ClientesModule onBack={() => setCurrentView('dashboard')} />
             ) : (
               /* VISTA: MÓDULO EN DESARROLLO POR EL MOMENTO */
               (() => {
