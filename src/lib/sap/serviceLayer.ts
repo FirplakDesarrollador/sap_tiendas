@@ -151,6 +151,15 @@ export function sapErrorMessage(data: any, status: number): string {
   return m?.value || data?.error?.code?.toString() || `SAP respondió ${status}`;
 }
 
+// Cola global (compartida entre rutas del mismo proceso) para serializar las llamadas al SL
+const sapQueue = globalThis as unknown as { __sapQueue?: Promise<unknown> };
+function serialize<T>(fn: () => Promise<T>): Promise<T> {
+  const prev = sapQueue.__sapQueue || Promise.resolve();
+  const run = prev.catch(() => undefined).then(fn);
+  sapQueue.__sapQueue = run.catch(() => undefined);
+  return run;
+}
+
 /**
  * Petición genérica al SAP Service Layer con reintento automático si expira la sesión
  */
@@ -167,12 +176,17 @@ export async function sapFetch<T = any>(endpoint: string, options: SapFetchOptio
   };
   if (options.maxPageSize) reqHeaders['Prefer'] = `odata.maxpagesize=${options.maxPageSize}`;
 
+  // El Service Layer bloquea las peticiones concurrentes de una misma sesión (~6 s de espera cada una),
+  // así que se encolan y se ejecutan una a una (cada GET tarda ~0,3 s).
   const doFetch = () =>
-    fetch(url, {
-      method: options.method || 'GET',
-      headers: reqHeaders,
-      body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
-      cache: 'no-store',
+    serialize(async () => {
+      const r = await fetch(url, {
+        method: options.method || 'GET',
+        headers: reqHeaders,
+        body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+        cache: 'no-store',
+      });
+      return { status: r.status, text: await r.text() };
     });
 
   let response = await doFetch();
@@ -186,7 +200,7 @@ export async function sapFetch<T = any>(endpoint: string, options: SapFetchOptio
     response = await doFetch();
   }
 
-  const text = await response.text();
+  const text = response.text;
   let data: any = null;
   if (text) {
     try {
