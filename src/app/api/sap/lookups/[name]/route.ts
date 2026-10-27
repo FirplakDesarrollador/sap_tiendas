@@ -230,6 +230,19 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ name: s
         if (!res.ok) throw new Error(res.error);
         return NextResponse.json({ ok: true, rows: res.data?.value || [] });
       }
+      case 'invoicerefs': {
+        // Nº y datos de facturas por DocEntry (para el detalle de pagos recibidos)
+        const entries = (sp.get('entries') || '').split(',').filter(x => /^\d+$/.test(x)).slice(0, 50);
+        if (!entries.length) return NextResponse.json({ ok: true, rows: [] });
+        const res = await sapFetch(
+          `Invoices?$select=DocEntry,DocNum,DocDate,DocDueDate,DocTotal,PaidToDate,NumAtCard&$filter=${enc(
+            entries.map(e => `DocEntry eq ${e}`).join(' or ')
+          )}&$top=50`,
+          { maxPageSize: 50 }
+        );
+        if (!res.ok) throw new Error(res.error);
+        return NextResponse.json({ ok: true, rows: res.data?.value || [] });
+      }
       case 'accounts': {
         const q = (sp.get('q') || '').trim();
         const f = [`ActiveAccount eq 'tYES'`];
