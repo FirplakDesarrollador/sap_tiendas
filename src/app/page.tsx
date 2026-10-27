@@ -50,7 +50,7 @@ import {
 } from 'lucide-react'
 import ClientesModule from '@/components/sap/ClientesModule'
 import InventarioModule from '@/components/sap/InventarioModule'
-import DocumentModule, { OFERTAS_CONFIG } from '@/components/sap/DocumentModule'
+import DocumentModule, { OFERTAS_CONFIG, ENTREGAS_CONFIG, FACTURAS_CONFIG } from '@/components/sap/DocumentModule'
 
 // Definición de interfaces para los módulos
 interface AppMod {
@@ -188,7 +188,7 @@ export default function AppHome() {
       icon: Truck,
       iconColor: '#7c3aed',
       iconBg: '#ede9fe',
-      status: 'Próximamente',
+      status: 'En vivo',
       tableRef: 'SAP: DeliveryNotes (ODLN)'
     },
     {
@@ -199,7 +199,7 @@ export default function AppHome() {
       icon: Receipt,
       iconColor: '#be123c',
       iconBg: '#ffe4e6',
-      status: 'Próximamente',
+      status: 'En vivo',
       tableRef: 'SAP: Invoices (OINV)'
     },
     {
@@ -780,7 +780,11 @@ export default function AppHome() {
             ) : currentView === 'sap-inventario' ? (
               <InventarioModule onBack={() => setCurrentView('dashboard')} />
             ) : currentView === 'sap-ofertas' ? (
-              <DocumentModule config={OFERTAS_CONFIG} onBack={() => setCurrentView('dashboard')} />
+              <DocumentModule key="ofertas" config={OFERTAS_CONFIG} onBack={() => setCurrentView('dashboard')} />
+            ) : currentView === 'sap-entregas' ? (
+              <DocumentModule key="entregas" config={ENTREGAS_CONFIG} onBack={() => setCurrentView('dashboard')} />
+            ) : currentView === 'sap-facturas' ? (
+              <DocumentModule key="facturas" config={FACTURAS_CONFIG} onBack={() => setCurrentView('dashboard')} />
             ) : (
               /* VISTA: MÓDULO EN DESARROLLO POR EL MOMENTO */
               (() => {
