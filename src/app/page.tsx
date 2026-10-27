@@ -49,6 +49,8 @@ import {
   Boxes
 } from 'lucide-react'
 import ClientesModule from '@/components/sap/ClientesModule'
+import InventarioModule from '@/components/sap/InventarioModule'
+import DocumentModule, { OFERTAS_CONFIG } from '@/components/sap/DocumentModule'
 
 // Definición de interfaces para los módulos
 interface AppMod {
@@ -164,7 +166,7 @@ export default function AppHome() {
       icon: Wallet,
       iconColor: '#15803d',
       iconBg: '#dcfce7',
-      status: 'Próximamente',
+      status: 'En vivo',
       tableRef: 'SAP: IncomingPayments (ORCT)'
     },
     {
@@ -175,7 +177,7 @@ export default function AppHome() {
       icon: FileSignature,
       iconColor: '#1d4ed8',
       iconBg: '#dbeafe',
-      status: 'Próximamente',
+      status: 'En vivo',
       tableRef: 'SAP: Quotations (OQUT)'
     },
     {
@@ -775,6 +777,10 @@ export default function AppHome() {
               </main>
             ) : currentView === 'sap-clientes' ? (
               <ClientesModule onBack={() => setCurrentView('dashboard')} />
+            ) : currentView === 'sap-inventario' ? (
+              <InventarioModule onBack={() => setCurrentView('dashboard')} />
+            ) : currentView === 'sap-ofertas' ? (
+              <DocumentModule config={OFERTAS_CONFIG} onBack={() => setCurrentView('dashboard')} />
             ) : (
               /* VISTA: MÓDULO EN DESARROLLO POR EL MOMENTO */
               (() => {
