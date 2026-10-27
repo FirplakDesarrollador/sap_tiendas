@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import s from './sap.module.css'
 import { apiGet, fmtMoney, fmtDate } from './sapApi'
 import { Field, TextInput, Tabs, Window, useLookup } from './ui'
+import CrearClienteForm from './CrearClienteForm'
 
 const PAGE = 20
 
@@ -14,6 +15,7 @@ function optLabel(opts: { value: any; label: string }[], v: any) {
 
 export default function ClientesModule({ onBack }: { onBack: () => void }) {
   const [selected, setSelected] = useState<string | null>(null)
+  const [creating, setCreating] = useState(false)
   return (
     <div className={s.workspace} id="sap-module-clientes">
       <div className={s.breadcrumb}>
@@ -22,12 +24,13 @@ export default function ClientesModule({ onBack }: { onBack: () => void }) {
         <button type="button" onClick={() => setSelected(null)}>Socios de negocio</button>
         {selected && (<><span>›</span><span>{selected}</span></>)}
       </div>
-      {selected ? <ClienteDetail cardCode={selected} onBack={() => setSelected(null)} /> : <ClientesList onOpen={setSelected} />}
+      {selected ? <ClienteDetail cardCode={selected} onBack={() => setSelected(null)} /> : <ClientesList onOpen={setSelected} onNew={() => setCreating(true)} />}
+      <CrearClienteForm open={creating} onClose={() => setCreating(false)} onCreated={code => { setCreating(false); setSelected(code) }} />
     </div>
   )
 }
 
-function ClientesList({ onOpen }: { onOpen: (code: string) => void }) {
+function ClientesList({ onOpen, onNew }: { onOpen: (code: string) => void; onNew: () => void }) {
   const [q, setQ] = useState('')
   const [property, setProperty] = useState('')
   const [group, setGroup] = useState('')
@@ -74,6 +77,8 @@ function ClientesList({ onOpen }: { onOpen: (code: string) => void }) {
         </label>
         <button type="button" className={s.btnOk} onClick={() => load(0)} id="clientes-buscar">Buscar</button>
         {loading && <span className={s.muted}>Consultando SAP…</span>}
+        <span className={s.spacer} />
+        <button type="button" className={s.btnNew} onClick={onNew} id="clientes-nuevo">+ Nuevo cliente</button>
       </div>
       {err && <div className={s.err}>{err}</div>}
       <div className={s.gridWrap} style={{ margin: 8 }}>
